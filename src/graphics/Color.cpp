@@ -1,4 +1,4 @@
-#include "Color.hpp"
+#include "graphics/Color.hpp"
 
 namespace GameEngine{
 Color::Color(int r, int g, int b) : r(r), g(g), b(b) {}

@@ -14,7 +14,6 @@ public:
     static const Color WHITE;
     static const Color CYAN;
     static const Color DARK_GRAY;
-    static const Color GREEN;
     static const Color LIGHT_GRAY;
     static const Color MAGENTA;
     static const Color ORANGE;

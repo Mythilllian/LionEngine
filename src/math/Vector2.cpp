@@ -1,4 +1,4 @@
-#include "Vector2.hpp"
+#include "math/Vector2.hpp"
 
 namespace GameEngine {
 Vector2::Vector2(float x, float y) : x(x), y(y) {}
