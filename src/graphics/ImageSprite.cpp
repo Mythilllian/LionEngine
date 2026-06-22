@@ -1,0 +1,28 @@
+#include "graphics/ImageSprite.hpp"
+
+namespace GameEngine{
+ImageSprite::ImageSprite(Texture* texture, Color tint) : texture(texture), Sprite(tint) {}
+ImageSprite::~ImageSprite() {
+    delete texture;
+}
+void ImageSprite::draw(SDL_Renderer* renderer, int x, int y, int width) {
+    if (!visible) return;
+    if (!texture) {
+        printf("Sprite draw failed: No texture loaded.\n");
+        return;
+    }
+    SDL_Rect dstRect;
+    dstRect.x = x;
+    dstRect.y = y;
+    dstRect.w = width;
+    dstRect.h = static_cast<int>(width * (static_cast<float>(texture->getSize().y) / texture->getSize().x)); // maintain aspect ratio
+    if(tint.a != 255) {
+        SDL_SetTextureBlendMode(texture->getSDLTexture(), SDL_BLENDMODE_BLEND);
+        SDL_SetTextureAlphaMod(texture->getSDLTexture(), tint.a);
+    } else {
+        SDL_SetTextureBlendMode(texture->getSDLTexture(), SDL_BLENDMODE_NONE);
+    }
+    SDL_SetTextureColorMod(texture->getSDLTexture(), tint.r, tint.g, tint.b);
+    SDL_RenderCopy(renderer, texture->getSDLTexture(), srcRect ? &(*srcRect) : NULL, &dstRect);
+}
+}

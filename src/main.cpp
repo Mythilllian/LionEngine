@@ -1,31 +1,23 @@
 #include <SDL.h>
+#include "graphics/Renderer.hpp"
+#include "graphics/ImageSprite.hpp"
+#include "graphics/RectSprite.hpp"
+#include "graphics/Color.hpp"
 #include "assets/AssetManager.hpp"
-#include "audio/AudioManager.hpp"
+using namespace GameEngine;
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
-    GameEngine::AssetManager assetManager("assets");
-    GameEngine::AudioManager audioManager;
+    SDL_Window* window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+    Renderer* renderer = new Renderer(window);
+    AssetManager assetManager("assets", renderer->getSDLRenderer());
 
-    GameEngine::Music* music = assetManager.loadMusicAsset("background.mp3");
-    GameEngine::Audio* audio = assetManager.loadAudioAsset("sound.wav");
-    
-    // audioManager.playMusic(*music);
-    audioManager.playAudio(*audio);
+    //ImageSprite* imageSprite = new ImageSprite(assetManager.loadTextureAsset("images/face.png"), Color(255, 255, 255, 128)); // semi-transparent white tint
+    RectSprite* rectSprite = new RectSprite(100, 50, Color(0, 255, 0), Color(255, 0, 0), 4, true);
+
+    //renderer->registerSprite(imageSprite);
+    renderer->registerSprite(rectSprite);
+
+    renderer->present();
     SDL_Delay(3000);
-    audioManager.playAudio(*audio, 500);
-    SDL_Delay(3000);
-    int x = audioManager.playAudio(*audio);
-    audioManager.setAudioVolume(50);
-    SDL_Delay(3000);
-    audioManager.playAudio(*audio, 500);
-    SDL_Delay(5000);
-    // audioManager.pauseMusic();
-    // SDL_Delay(2000);
-    // audioManager.resumeMusic();
-    // int x = audioManager.playAudio(*audio,500);
-    // SDL_Delay(5000);
-    // audioManager.stopMusic(1000);
-    SDL_Quit();
-    return 0;
 }

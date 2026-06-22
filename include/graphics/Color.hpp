@@ -1,11 +1,17 @@
+#pragma once
+
+#include <SDL.h>
+
 namespace GameEngine {
 class Color{
 public:
     // Color values range from 0-255 (inclusive)
-    int r, g, b;
-    Color(int r, int g, int b);
+    Uint8 r, g, b, a;
+    Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+    Color(int r, int g, int b, int a = 255);
     Color toGrayscale();
     Color invert();
+    SDL_Color toSDLColor() const;
 
     static const Color RED;
     static const Color GREEN;

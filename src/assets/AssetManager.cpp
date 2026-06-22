@@ -23,6 +23,13 @@ Music* AssetManager::loadMusicAsset(const std::string& assetLocation, int volume
     }
     return new Music(assetDirectory + "/" + assetLocation, volume);
 }
+Texture* AssetManager::loadTextureAsset(const std::string& assetLocation) {
+    if (!exists(assetLocation)) {
+        printf("Texture file not found: %s\n", assetLocation.c_str());
+        return nullptr;
+    }
+    return new Texture(assetDirectory + "/" + assetLocation, renderer);
+}
 bool AssetManager::exists(const std::string& location) {
     std::ifstream file(assetDirectory + "/" + location);
     return file.good();

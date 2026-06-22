@@ -1,14 +1,21 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <SDL.h>
+#include "graphics/Sprite.hpp"
 
 namespace GameEngine{
 class Renderer{
 public:
-    void loadTexture(const std::string& filename);
-    void drawSprite(int x, int y);
-    void drawRect(int x, int y, int width, int height);
-    void drawText(const std::string& text, int x, int y);
+    Renderer(SDL_Window* window, int reservedSpriteCount = 100);
+    ~Renderer();
+    SDL_Renderer* getSDLRenderer() const;
+    void registerSprite(Sprite* sprite);
+    void unregisterSprite(Sprite* sprite);
     void present();
+private:
+    std::vector<Sprite*> sprites;
+    SDL_Renderer* sdlRenderer;
 };
 }

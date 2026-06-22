@@ -2,10 +2,6 @@
 
 namespace GameEngine {
 Vector2::Vector2(float x, float y) : x(x), y(y) {}
-Vector2::Vector2(const Vector2i& other) {
-    x = static_cast<float>(other.x);
-    y = static_cast<float>(other.y);
-}
 Vector2 Vector2::operator+(const Vector2& other) const {
     return Vector2(x + other.x, y + other.y);
 }
@@ -29,4 +25,10 @@ Vector2 Vector2::normalized() const {
     if (len == 0) return Vector2(0, 0);
     return Vector2(x / len, y / len);
 }
+const Vector2 Vector2::DOWN{0, -1};
+const Vector2 Vector2::LEFT{-1, 0};
+const Vector2 Vector2::ONE{1, 1};
+const Vector2 Vector2::RIGHT{1, 0};
+const Vector2 Vector2::UP{0, 1};
+const Vector2 Vector2::ZERO{0, 0};
 }
