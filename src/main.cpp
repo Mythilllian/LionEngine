@@ -6,6 +6,7 @@
 #include "assets/AssetManager.hpp"
 #include "input/Input.hpp"
 #include "scene/Entity.hpp"
+#include "input/KeyCode.hpp"
 #include <iostream>
 using namespace GameEngine;
 int main() {
@@ -39,6 +40,11 @@ int main() {
         childEntity->localTransform.position.x++;
         renderer->render(components);
         SDL_Delay(1000);
+        Input::update();
+        if(Input::isKeyDown(KeyCode::KEY_W)){
+            std::cout << "W key pressed!" << std::endl;
+            break;
+        }
     }
 
     SDL_DestroyWindow(window);
