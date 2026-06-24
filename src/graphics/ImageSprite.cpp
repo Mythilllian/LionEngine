@@ -5,7 +5,7 @@ ImageSprite::ImageSprite(Texture* texture, Color tint) : texture(texture), Sprit
 ImageSprite::~ImageSprite() {
     delete texture;
 }
-void ImageSprite::draw(SDL_Renderer* renderer, int x, int y, int width) {
+void ImageSprite::draw(Renderer* renderer, float x, float y, float width) {
     if (!visible) return;
     if (!texture) {
         printf("Sprite draw failed: No texture loaded.\n");
@@ -16,13 +16,11 @@ void ImageSprite::draw(SDL_Renderer* renderer, int x, int y, int width) {
     dstRect.y = y;
     dstRect.w = width;
     dstRect.h = static_cast<int>(width * (static_cast<float>(texture->getSize().y) / texture->getSize().x)); // maintain aspect ratio
+    SDL_SetTextureBlendMode(texture->getSDLTexture(), SDL_BLENDMODE_BLEND);
     if(tint.a != 255) {
-        SDL_SetTextureBlendMode(texture->getSDLTexture(), SDL_BLENDMODE_BLEND);
         SDL_SetTextureAlphaMod(texture->getSDLTexture(), tint.a);
-    } else {
-        SDL_SetTextureBlendMode(texture->getSDLTexture(), SDL_BLENDMODE_NONE);
     }
     SDL_SetTextureColorMod(texture->getSDLTexture(), tint.r, tint.g, tint.b);
-    SDL_RenderCopy(renderer, texture->getSDLTexture(), srcRect ? &(*srcRect) : NULL, &dstRect);
+    SDL_RenderCopy(renderer->getSDLRenderer(), texture->getSDLTexture(), srcRect ? &(*srcRect) : NULL, &dstRect);
 }
 }

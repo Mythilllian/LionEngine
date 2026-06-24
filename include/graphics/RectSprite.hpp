@@ -1,13 +1,14 @@
 #pragma once
 
-#include <SDL.h>
 #include "graphics/Sprite.hpp"
 #include "graphics/Color.hpp"
 #include "math/Vector2i.hpp"
+#include "graphics/Renderer.hpp"
+#include "math/Rect.hpp"
+#include <SDL.h>
 
 namespace GameEngine{
-class RectSprite : public Sprite {
-public:
+struct RectSprite : public Sprite {
     RectSprite(int width, int height, Color fillColor = Color::WHITE, Color outlineColor = Color::BLACK, int outlineThickness = 1, bool outlineInRect = false);
     RectSprite(Vector2i size, Color fillColor = Color::WHITE, Color outlineColor = Color::BLACK, int outlineThickness = 1, bool outlineInRect = false);
     Vector2i size;
@@ -15,6 +16,6 @@ public:
     Color outlineColor = Color::BLACK;
     int outlineThickness = 0;
     bool outlineInRect = false;
-    void draw(SDL_Renderer* renderer, int x, int y, int width) override;
+    void draw(Renderer* renderer, float x, float y, float width) override;
 };
 }
