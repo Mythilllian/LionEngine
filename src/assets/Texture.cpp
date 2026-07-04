@@ -1,9 +1,9 @@
 #include "assets/Texture.hpp"
-#include <SDL_image.h>
+#include "graphics/Renderer.hpp"
 
 namespace GameEngine {
-Texture::Texture(const std::string& path, SDL_Renderer* renderer) : Asset(path) {
-    texture = IMG_LoadTexture(renderer, path.c_str());
+Texture::Texture(const std::string& path, Renderer* renderer) : Asset(path) {
+    texture = IMG_LoadTexture(renderer->getSDLRenderer(), path.c_str());
     if (!texture) {
         printf("Failed to load texture: %s\n", SDL_GetError());
     }
@@ -14,6 +14,13 @@ Texture::~Texture() {
 }
 SDL_Texture* Texture::getSDLTexture() const {
     return texture;
+}
+SDL_Surface* Texture::getSDLSurface() const {
+    SDL_Surface *surface = NULL;
+    void *pixels = NULL;
+    SDL_LockTextureToSurface(texture, NULL, &surface);
+    SDL_UnlockTexture(texture);
+    return surface;
 }
 Vector2i Texture::getSize() const {
     return size;

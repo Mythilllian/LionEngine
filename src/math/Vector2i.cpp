@@ -18,6 +18,32 @@ Vector2i Vector2i::operator*(int scalar) const {
 Vector2i Vector2i::operator/(int scalar) const {
     return Vector2i(x / scalar, y / scalar);
 }
+Vector2i Vector2i::operator+=(const Vector2i& other) {
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+Vector2i Vector2i::operator-=(const Vector2i& other) {
+    x -= other.x;
+    y -= other.y;
+    return *this;
+}
+Vector2i Vector2i::operator*=(int scalar) {
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
+Vector2i Vector2i::operator/=(int scalar) {
+    x /= scalar;
+    y /= scalar;
+    return *this;
+}
+bool Vector2i::operator==(const Vector2i& other) const {
+    return x == other.x && y == other.y;
+}
+bool Vector2i::operator!=(const Vector2i& other) const {
+    return !(*this == other);
+}
 float Vector2i::dotProduct(const Vector2i& other) const {
     return x * other.x + y * other.y;
 }

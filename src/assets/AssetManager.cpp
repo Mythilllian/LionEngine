@@ -2,6 +2,7 @@
 #include <fstream>
 
 namespace GameEngine {
+AssetManager::AssetManager(const std::string& assetDirectory, Renderer* renderer) : assetDirectory(assetDirectory), renderer(renderer) { }
 Asset* AssetManager::loadAsset(const std::string& assetLocation) {
     if (!exists(assetLocation)) {
         printf("Asset file not found: %s\n", assetLocation.c_str());

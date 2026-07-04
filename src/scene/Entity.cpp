@@ -3,21 +3,27 @@
 
 namespace GameEngine
 {
-Entity::Entity(Entity* parent, const std::string& name, const Transform& localTransform) : parent(parent), localTransform(localTransform)
+Entity::Entity(Entity* parent, const std::string& name, const Transform& transform, bool isGlobalTransform, bool active) : parent(parent), name(name), active(active)
 {
     if(parent != nullptr){
         parent->addChild(this);
     }
-    if(parent != nullptr && parent->getChildByName(name) != nullptr){
-        int i = 1;
-        while (parent->getChildByName(name + std::to_string(i)) != nullptr) {
-            i++;
-        }
-        this->name = name + std::to_string(i);
+    if(isGlobalTransform){
+        updateGlobalTransform(transform);
     }
     else{
-        this->name = name;
+        localTransform = transform;
     }
+    // if(parent != nullptr && parent->getChildByName(name) != nullptr){
+    //     int i = 1;
+    //     while (parent->getChildByName(name + std::to_string(i)) != nullptr) {
+    //         i++;
+    //     }
+    //     this->name = name + std::to_string(i);
+    // }
+    // else{
+    //     this->name = name;
+    // }
 }
 void Entity::init()
 {
@@ -73,29 +79,67 @@ std::vector<Component*> Entity::getComponents() const
 {
     return components;
 }
-Entity* Entity::getParent()
+Entity* Entity::getParent() const
 {
     return parent;
 }
-void Entity::setParent(Entity* parent)
+void Entity::setParent(Entity* parent, bool keepGlobalTransform)
 {
-    this->parent->removeChild(this);
-    this->parent = parent;
-    this->parent->addChild(this);
+    if (keepGlobalTransform)
+    {
+        Transform globalTransform = this->globalTransform();
+        if (this->parent != nullptr)
+        {
+            this->parent->removeChild(this);
+        }
+        this->parent = parent;
+        this->parent->addChild(this);
+        this->updateGlobalTransform(globalTransform);
+    }
+    else
+    {
+        if (this->parent != nullptr)
+        {
+            this->parent->removeChild(this);
+        }
+        this->parent = parent;
+        this->parent->addChild(this);
+    }
 }
 std::vector<Entity*> Entity::getChildren() const
 {
     return children;
 }
-void Entity::addChild(Entity* child)
+std::vector<Entity*> Entity::getDescendants() const
 {
+    std::vector<Entity*> descendants;
+    for (auto& child : children)
+    {
+        descendants.push_back(child);
+        auto childDescendants = child->getDescendants();
+        descendants.insert(descendants.end(), childDescendants.begin(), childDescendants.end());
+    }
+    return descendants;
+}
+void Entity::addChild(Entity* child, bool keepGlobalTransform)
+{
+    if(keepGlobalTransform)
+    {
+        Transform globalTransform = child->globalTransform();
+        child->parent = this;
+        child->updateGlobalTransform(globalTransform);
+    }
+    else
+    {
+        child->parent = this;
+    }
     children.push_back(child);
 }
 void Entity::removeChild(Entity* child)
 {
     children.erase(std::remove(children.begin(), children.end(), child), children.end());
 }
-Entity* Entity::getDescendantByName(const std::string& name)
+Entity* Entity::getDescendantByName(const std::string& name) const
 {
     for (auto& child : children)
     {
@@ -111,7 +155,7 @@ Entity* Entity::getDescendantByName(const std::string& name)
     }
     return nullptr;
 }
-Entity* Entity::getChildByName(const std::string& name)
+Entity* Entity::getChildByName(const std::string& name) const
 {
     for (auto& child : children)
     {
@@ -132,10 +176,24 @@ Transform Entity::globalTransform() const
 }
 void Entity::updateGlobalTransform(Transform transform)
 {
-    localTransform = transform / globalTransform();
+    localTransform = transform / parent->globalTransform();
 }
 void Entity::updateGlobalTransform(Vector2 position, Vector2 scale, float rotation)
 {
     updateGlobalTransform(Transform(position, scale, rotation));
+}
+Entity* Entity::clone(bool keepGlobalTransform) const
+{
+    Entity* newEntity = new Entity(nullptr, name, keepGlobalTransform ? globalTransform() : localTransform);
+    for (auto& component : components)
+    {
+        newEntity->copyComponent(component);
+    }
+    for (auto& child : children)
+    {
+        Entity* clonedChild = child->clone();
+        newEntity->addChild(clonedChild);
+    }
+    return newEntity;
 }
 }

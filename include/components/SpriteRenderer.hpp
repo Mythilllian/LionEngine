@@ -17,6 +17,7 @@ public:
     void start() override;
     void update(float deltaTime) override;
     void shutdown() override;
+    SpriteRenderer* clone(Entity* newParent) override;
     void draw(Renderer* renderer);
 };
 }

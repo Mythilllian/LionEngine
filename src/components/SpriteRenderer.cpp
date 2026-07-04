@@ -13,4 +13,10 @@ void SpriteRenderer::init() { }
 void SpriteRenderer::start() { }
 void SpriteRenderer::update(float deltaTime) { }
 void SpriteRenderer::shutdown() { }
+SpriteRenderer* SpriteRenderer::clone(Entity* newParent) {
+    SpriteRenderer* newSpriteRenderer = new SpriteRenderer(newParent);
+    newSpriteRenderer->sprite = this->sprite;
+    newSpriteRenderer->layer = this->layer;
+    return newSpriteRenderer;
+}
 }

@@ -3,6 +3,9 @@
 namespace GameEngine{
 RectSprite::RectSprite(int width, int height, Color fillColor, Color outlineColor, int outlineThickness, bool outlineInRect) : Sprite(), size{width, height}, fillColor(fillColor), outlineColor(outlineColor), outlineThickness(outlineThickness), outlineInRect(outlineInRect) {}
 RectSprite::RectSprite(Vector2i size, Color fillColor, Color outlineColor, int outlineThickness, bool outlineInRect) : Sprite(), size(size), fillColor(fillColor), outlineColor(outlineColor), outlineThickness(outlineThickness), outlineInRect(outlineInRect) {}
+Vector2i RectSprite::getSize() const {
+    return size;
+}
 void RectSprite::draw(Renderer* renderer, float x, float y, float width) {
     if (!visible) return;
     if (size.x <= 0 || size.y <= 0) return;

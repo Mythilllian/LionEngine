@@ -1,20 +1,19 @@
 #include "graphics/Renderer.hpp"
 
 namespace GameEngine {
-Renderer::Renderer(SDL_Window* window, Color clearColor, int logicalWidth, int logicalHeight) : clearColor(clearColor) {
-    sdlRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+Renderer::Renderer(Window& window, Color clearColor, Vector2i logicalSize) : clearColor(clearColor) {
+    sdlRenderer = SDL_CreateRenderer(window.getSDLWindow(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!sdlRenderer) {
         printf("Failed to create SDL Renderer: %s\n", SDL_GetError());
     }
     setRenderScaleQuality("0");
-    if(logicalWidth <= 0 || logicalHeight <= 0) {
-        int windowWidth, windowHeight;
-        SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-        logicalWidth = windowWidth;
-        logicalHeight = windowHeight;
+    if(logicalSize.x <= 0 || logicalSize.y <= 0) {
+        logicalSize = Vector2i(window.getSize());
+        camera = new Camera(logicalSize);
     }
     else {
-        setLogicalSize(logicalWidth, logicalHeight);
+        camera = new Camera(logicalSize);
+        setLogicalSize(logicalSize.x, logicalSize.y);
     }
 }
 Renderer::~Renderer() {
@@ -27,13 +26,17 @@ void Renderer::render(std::vector<SpriteRenderer*>& spriteRenderers) {
     std::sort(spriteRenderers.begin(), spriteRenderers.end(), [](const SpriteRenderer* a, const SpriteRenderer* b) {
         return a->layer < b->layer;
     });
-    
     SDL_SetRenderDrawColor(sdlRenderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     SDL_RenderClear(sdlRenderer);
+    SDL_Rect cameraRect = { -static_cast<int>(camera->position.x), -static_cast<int>(camera->position.y), camera->size.x, camera->size.y };
+    SDL_RenderSetViewport(sdlRenderer, &cameraRect);
     for (SpriteRenderer* element : spriteRenderers) {
         element->draw(this);
     }
     SDL_RenderPresent(sdlRenderer);
+}
+Camera* Renderer::getCamera() const {
+    return camera;
 }
 void Renderer::setLogicalSize(int width, int height) {
     if(width <= 0 || height <= 0) {
@@ -42,6 +45,7 @@ void Renderer::setLogicalSize(int width, int height) {
     }
     SDL_RenderSetLogicalSize(sdlRenderer, width, height);
     logicalSize = Vector2i(width, height);
+    camera->setSize(logicalSize);
 }
 Vector2i Renderer::getLogicalSize() const {
     return logicalSize;

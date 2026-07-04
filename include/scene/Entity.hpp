@@ -9,7 +9,7 @@ namespace GameEngine {
 class Component;
 class Entity {
 public:
-    Entity(Entity* parent, const std::string& name = "Entity", const Transform& localTransform = Transform());
+    Entity(Entity* parent, const std::string& name = "Entity", const Transform& localTransform = Transform(), bool isGlobalTransform = false, bool active = true);
     ~Entity() = default;
     void init();
     void start();
@@ -24,7 +24,15 @@ public:
         return component;
     }
     template <typename T>
-    T* getComponent()
+    T* copyComponent(T *component)
+    {
+        static_assert(std::is_base_of<Component, T>::value, "Tried to add a non-Component type to Components.");
+        T* clonedComponent = component->clone(this);
+        components.push_back(clonedComponent);
+        return clonedComponent;
+    }
+    template <typename T>
+    T* getComponent() const
     {
         static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
         for (auto& component : components)
@@ -37,7 +45,7 @@ public:
         return nullptr;
     }
     template <typename T>
-    T* getComponentInChildren()
+    T* getComponentInChildren() const
     {
         static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
         for (auto& child : children)
@@ -50,7 +58,7 @@ public:
         return nullptr;
     }
     template <typename T>
-    std::vector<T*> getComponentsInChildren()
+    std::vector<T*> getComponentsInChildren() const
     {
         static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
         std::vector<T*> components;
@@ -64,7 +72,7 @@ public:
         return components;
     }
     template <typename T>
-    T* getComponentInDescendants()
+    T* getComponentInDescendants() const
     {
         static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
         for (auto& child : children)
@@ -81,7 +89,7 @@ public:
         return nullptr;
     }
     template <typename T>
-    std::vector<T*> getComponentsInDescendants()
+    std::vector<T*> getComponentsInDescendants() const
     {
         static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
         std::vector<T*> components;
@@ -112,19 +120,22 @@ public:
         return false;
     }
     std::vector<Component*> getComponents() const;
-    Entity* getParent();
-    void setParent(Entity* parent);
+    Entity* getParent() const;
+    void setParent(Entity* parent, bool keepGlobalTransform = true);
     std::vector<Entity*> getChildren() const;
-    void addChild(Entity* child);
+    std::vector<Entity*> getDescendants() const;
+    void addChild(Entity* child, bool keepGlobalTransform = true);
     void removeChild(Entity* child);
-    Entity* getDescendantByName(const std::string& name);
-    Entity* getChildByName(const std::string& name);
+    Entity* getDescendantByName(const std::string& name) const;
+    Entity* getChildByName(const std::string& name) const;
     std::string name;
     bool active = true;
     Transform localTransform;
     Transform globalTransform() const;
     void updateGlobalTransform(Transform transform);
     void updateGlobalTransform(Vector2 position = Vector2{0, 0}, Vector2 scale = Vector2{1, 1}, float rotation = 0);
+    Entity* clone(bool keepGlobalTransform = true) const;
+    bool enabled = true;
 private:
     std::vector<Component*> components;
     Entity* parent;

@@ -5,6 +5,13 @@ ImageSprite::ImageSprite(Texture* texture, Color tint) : texture(texture), Sprit
 ImageSprite::~ImageSprite() {
     delete texture;
 }
+Vector2i ImageSprite::getSize() const {
+    if (!texture) {
+        printf("Sprite getSize failed: No texture loaded.\n");
+        return Vector2i(0, 0);
+    }
+    return texture->getSize();
+}
 void ImageSprite::draw(Renderer* renderer, float x, float y, float width) {
     if (!visible) return;
     if (!texture) {

@@ -7,21 +7,26 @@
 #include "graphics/Color.hpp"
 #include "components/SpriteRenderer.hpp"
 #include "math/Vector2i.hpp"
+#include "graphics/Camera.hpp"
+#include "graphics/Window.hpp"
 
 namespace GameEngine{
+class Camera;
 class SpriteRenderer;
 class Renderer{
 public:
-    Renderer(SDL_Window* window, Color clearColor = Color(0, 0, 0, 255), int logicalWidth = -1, int logicalHeight = -1);
+    Renderer(Window& window, Color clearColor = Color(0, 0, 0, 255), Vector2i logicalSize = Vector2i(256, 224));
     ~Renderer();
     SDL_Renderer* getSDLRenderer() const;
     void render(std::vector<SpriteRenderer*>& spriteRenderers);
     Color clearColor;
+    Camera* getCamera() const;
     void setLogicalSize(int width, int height);
     Vector2i getLogicalSize() const;
     void setRenderScaleQuality(const std::string& quality);
 private:
     SDL_Renderer* sdlRenderer;
     Vector2i logicalSize;
+    Camera* camera;
 };
 }

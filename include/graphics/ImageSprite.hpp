@@ -4,14 +4,15 @@
 #include "graphics/Renderer.hpp"
 #include "assets/Texture.hpp"
 #include "math/Rect.hpp"
-#include <optional>
+#include "math/Vector2i.hpp"
 
 namespace GameEngine {
 struct ImageSprite : public Sprite {
     ImageSprite(Texture* texture, Color tint = Color::WHITE);
     ~ImageSprite();
     Texture* texture;
-    std::optional<SDL_Rect> srcRect = std::nullopt;
+    SDL_Rect* srcRect = nullptr;;
+    Vector2i getSize() const override;
     void draw(Renderer* renderer, float x, float y, float width); // height is calculated to maintain aspect ratio
 };
 }

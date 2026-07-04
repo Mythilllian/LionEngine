@@ -15,4 +15,12 @@ Transform Transform::operator/(const Transform& other)
     float newRotation = rotation - other.rotation;
     return Transform(newPosition, newScale, newRotation);
 }
+bool Transform::operator==(const Transform& other) const
+{
+    return position == other.position && scale == other.scale && rotation == other.rotation;
+}
+bool Transform::operator!=(const Transform& other) const
+{
+    return !(*this == other);
+}
 }

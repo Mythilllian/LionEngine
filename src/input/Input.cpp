@@ -4,6 +4,7 @@
 namespace GameEngine {
 bool Input::currentKeys[SDL_NUM_SCANCODES] = {};
 bool Input::previousKeys[SDL_NUM_SCANCODES] = {};
+bool Input::quitRequested = false;
 void Input::update() {
     std::copy(
         currentKeys,
@@ -21,6 +22,8 @@ void Input::update() {
             currentKeys[event.button.button] = true;
         if (event.type == SDL_MOUSEBUTTONUP)
             currentKeys[event.button.button] = false;
+        if (event.type == SDL_QUIT)
+            quitRequested = true;
     }
 }
 bool Input::isKeyJustPressed(KeyCode key) {
@@ -36,6 +39,9 @@ bool Input::isKeyReleased(KeyCode key)
 bool Input::isKeyDown(KeyCode key)
 {
     return currentKeys[static_cast<int>(key)];
+}
+bool Input::wasQuitRequested() {
+    return quitRequested;
 }
 Vector2 Input::getMousePosition() {
     int x, y;

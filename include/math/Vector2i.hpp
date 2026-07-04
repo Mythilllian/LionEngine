@@ -12,6 +12,12 @@ public:
     Vector2i operator-(const Vector2i& other) const;
     Vector2i operator*(int scalar) const;
     Vector2i operator/(int scalar) const;
+    Vector2i operator+=(const Vector2i& other);
+    Vector2i operator-=(const Vector2i& other);
+    Vector2i operator*=(int scalar);
+    Vector2i operator/=(int scalar);
+    bool operator==(const Vector2i& other) const;
+    bool operator!=(const Vector2i& other) const;
     float dotProduct(const Vector2i& other) const;
     float magnitude() const;
     Vector2 toVector2() const;

@@ -11,6 +11,7 @@ public:
     virtual void start() = 0;
     virtual void update(float deltaTime) = 0;
     virtual void shutdown() = 0;
+    virtual Component* clone(Entity* newParent) = 0;
     bool active = true;
 protected:
     Entity* parent;
