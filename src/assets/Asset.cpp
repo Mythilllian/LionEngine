@@ -2,4 +2,5 @@
 
 namespace GameEngine {
 Asset::Asset(const std::string& path) : path(path) {}
+Asset::Asset() : path("") {}
 }

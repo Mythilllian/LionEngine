@@ -2,6 +2,10 @@
 
 #include "assets/Asset.hpp"
 #include <SDL_mixer.h>
+#include "utils/Logger.hpp"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace GameEngine {
 class Audio : public Asset {
@@ -17,4 +21,6 @@ private:
     Mix_Chunk* audioChunk;
     int volume; // default/maximum volume of the audio
 };
+void from_json(const json& j, Audio& u);
+void to_json(json& j, const Audio& u);
 }

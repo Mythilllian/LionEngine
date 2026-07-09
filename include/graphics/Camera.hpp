@@ -1,6 +1,7 @@
 #pragma once
 #include "math/Vector2.hpp"
 #include "math/Vector2i.hpp"
+#include <nlohmann/json.hpp>
 
 namespace GameEngine{
 class Renderer;
@@ -23,4 +24,5 @@ protected:
     Vector2i size;
     void setSize(Vector2i size);
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Camera, position, size)
 }

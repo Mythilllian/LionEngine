@@ -1,7 +1,11 @@
-#include "scene/Scene.hpp"
+#include "ecs/Scene.hpp"
 
 namespace GameEngine {
 Scene::Scene() : root(nullptr, "Root") {}
+// Scene::Scene(json sceneData) : root(nullptr, "Root") 
+// {
+//     root.deserialize(sceneData);
+// }
 void Scene::init() {
     root.init();
 }

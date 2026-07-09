@@ -6,7 +6,7 @@ Music::Music(const std::string& path, int volume) : Asset(path), music(Mix_LoadM
     volume = std::clamp(volume, 0, MIX_MAX_VOLUME);
     this->volume = volume;
     if (!music) {
-        printf("Failed to load music: %s\n", Mix_GetError());
+        Logger::logWarning("Failed to load music: %s", Mix_GetError());
     }
 }
 Music::~Music() {
@@ -34,5 +34,14 @@ float Music::getVolumePercent() const {
 }
 Mix_Music* Music::getMusic() const {
     return music;
+}
+void from_json(const json& j, Music& u) {
+    auto path = j.at("path").get<std::string>();
+    auto volume = j.at("volume").get<int>();
+    u.~Music();
+    ::new (&u) Music(path, volume);
+}
+void to_json(json& j, const Music& u) {
+    j = json{{"path", u.path}, {"volume", u.getVolume()}};
 }
 }

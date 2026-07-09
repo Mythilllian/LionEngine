@@ -1,15 +1,16 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "components/Component.hpp"
-#include "components/Transform.hpp"
+#include "ecs/Component.hpp"
+#include "ecs/Transform.hpp"
 #include "math/Vector2.hpp"
+#include "utils/Logger.hpp"
 
 namespace GameEngine {
 class Component;
 class Entity {
 public:
-    Entity(Entity* parent, const std::string& name = "Entity", const Transform& localTransform = Transform(), bool isGlobalTransform = false, bool active = true);
+    Entity(Entity* parent = nullptr, const std::string& name = "Entity", const Transform& localTransform = Transform(), bool isGlobalTransform = false, bool active = true);
     ~Entity() = default;
     void init();
     void start();
@@ -18,15 +19,30 @@ public:
     template <typename T>
     T* addComponent()
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to add a non-Component type to Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to add a non-Component type to %s.", name.c_str());
+            return nullptr;
+        }
         T* component = new T(this);
+        components.push_back(component);
+        return component;
+    }
+    Component* addComponent(Component* component)
+    {
+        if(component->getParent() != this) {
+            Logger::logError("Tried to add a Component that does not belong to this Entity.");
+            return nullptr;
+        }
         components.push_back(component);
         return component;
     }
     template <typename T>
     T* copyComponent(T *component)
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to add a non-Component type to Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to copy a non-Component type to %s.", name.c_str());
+            return nullptr;
+        }
         T* clonedComponent = component->clone(this);
         components.push_back(clonedComponent);
         return clonedComponent;
@@ -34,7 +50,10 @@ public:
     template <typename T>
     T* getComponent() const
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to get a non-Component type from %s.", name.c_str());
+            return nullptr;
+        }
         for (auto& component : components)
         {
             if (T* castedComponent = dynamic_cast<T*>(component))
@@ -47,7 +66,10 @@ public:
     template <typename T>
     T* getComponentInChildren() const
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to get a non-Component type from %s.", name.c_str());
+            return nullptr;
+        }
         for (auto& child : children)
         {
             if (T* component = child->getComponent<T>())
@@ -60,7 +82,10 @@ public:
     template <typename T>
     std::vector<T*> getComponentsInChildren() const
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to get a non-Component type from %s.", name.c_str());
+            return std::vector<T*>();
+        }
         std::vector<T*> components;
         for (auto& child : children)
         {
@@ -74,7 +99,10 @@ public:
     template <typename T>
     T* getComponentInDescendants() const
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to get a non-Component type from %s.", name.c_str());
+            return nullptr;
+        }
         for (auto& child : children)
         {
             if (T* component = child->getComponent<T>())
@@ -91,7 +119,10 @@ public:
     template <typename T>
     std::vector<T*> getComponentsInDescendants() const
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to get a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to get a non-Component type from %s.", name.c_str());
+            return std::vector<T*>();
+        }
         std::vector<T*> components;
         for (auto& child : children)
         {
@@ -107,7 +138,10 @@ public:
     template <typename T>
     bool removeComponent()
     {
-        static_assert(std::is_base_of<Component, T>::value, "Tried to remove a non-Component type from Components.");
+        if(!std::is_base_of<Component, T>::value) {
+            Logger::logError("Tried to remove a non-Component type from %s.", name.c_str());
+            return false;
+        }
         for (auto it = components.begin(); it != components.end(); ++it)
         {
             if (T* castedComponent = dynamic_cast<T*>(*it))
@@ -135,10 +169,11 @@ public:
     void updateGlobalTransform(Transform transform);
     void updateGlobalTransform(Vector2 position = Vector2{0, 0}, Vector2 scale = Vector2{1, 1}, float rotation = 0);
     Entity* clone(bool keepGlobalTransform = true) const;
-    bool enabled = true;
 private:
     std::vector<Component*> components;
     Entity* parent;
     std::vector<Entity*> children;
 };
+void from_json(const nlohmann::json& j, Entity& u);
+void to_json(nlohmann::json& j, const Entity& u);
 }

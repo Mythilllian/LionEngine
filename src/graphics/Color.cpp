@@ -2,9 +2,8 @@
 
 namespace GameEngine{
 Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) : r(r), g(g), b(b), a(a) {}
-Color::Color(int r, int g, int b, int a) : r(static_cast<Uint8>(r)), g(static_cast<Uint8>(g)), b(static_cast<Uint8>(b)), a(static_cast<Uint8>(a)) {}
 Color Color::toGrayscale(){
-    int gray = (static_cast<int>(r) + static_cast<int>(g) + static_cast<int>(b)) / 3;
+    Uint8 gray = static_cast<Uint8>((static_cast<int>(r) + static_cast<int>(g) + static_cast<int>(b)) / 3);
     return Color(gray, gray, gray, a);
 }
 Color Color::invert(){
@@ -12,6 +11,24 @@ Color Color::invert(){
 }
 SDL_Color Color::toSDLColor() const {
     return SDL_Color{r, g, b, a};
+}
+Color Color::operator*(float scalar) const {
+    return Color(static_cast<Uint8>(r * scalar), static_cast<Uint8>(g * scalar), static_cast<Uint8>(b * scalar), a);
+}
+Color Color::operator*(const Color other) const {
+    return Color(static_cast<Uint8>(r * other.r / 255), static_cast<Uint8>(g * other.g / 255), static_cast<Uint8>(b * other.b / 255), a);
+}
+Color Color::operator*(float scalar) {
+    r = static_cast<Uint8>(r * scalar);
+    g = static_cast<Uint8>(g * scalar);
+    b = static_cast<Uint8>(b * scalar);
+    return *this;
+}
+Color Color::operator*(const Color other) {
+    r = static_cast<Uint8>(r * other.r / 255);
+    g = static_cast<Uint8>(g * other.g / 255);
+    b = static_cast<Uint8>(b * other.b / 255);
+    return *this;
 }
 const Color Color::RED{255, 0, 0};
 const Color Color::GREEN{0, 255, 0};

@@ -2,10 +2,9 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
-
 #include "assets/Audio.hpp"
 #include "assets/Music.hpp"
-
+#include "utils/Logger.hpp"
 
 namespace GameEngine {
 class AudioManager {

@@ -1,13 +1,27 @@
-#include "scene/SceneManager.hpp"
+#include "ecs/SceneManager.hpp"
+#include "ecs/ImageSpriteRenderer.hpp"
 
 namespace GameEngine {
-SceneManager::SceneManager() : currentScene(nullptr) {}
+SceneManager::SceneManager(AssetManager* assetManager) : assetManager(assetManager), currentScene(nullptr) {}
+SceneManager::SceneManager(AssetManager* assetManager, Scene* scene) : assetManager(assetManager) { loadScene(scene); }
+SceneManager::SceneManager(AssetManager* assetManager, const std::string& path) : assetManager(assetManager) { loadScene(path); }
 void SceneManager::loadScene(Scene* scene) {
     if (currentScene) {
         currentScene->shutdown();
         delete currentScene;
     }
     currentScene = scene;
+    assetManager->uploadUnloadedTextures();
+    currentScene->init();
+    currentScene->start();
+}
+void SceneManager::loadScene(const std::string& path) {
+    if (currentScene) {
+        currentScene->shutdown();
+        delete currentScene;
+    }
+    &assetManager->loadJson(path).get_to(currentScene);
+    assetManager->uploadUnloadedTextures();
     currentScene->init();
     currentScene->start();
 }

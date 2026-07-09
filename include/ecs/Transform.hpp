@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/Vector2.hpp"
+#include <nlohmann/json.hpp>
 
 namespace GameEngine
 {
@@ -16,4 +17,5 @@ struct Transform
     bool operator==(const Transform& other) const;
     bool operator!=(const Transform& other) const;
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Transform, position, scale, rotation)
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "components/Component.hpp"
-#include "components/Transform.hpp"
+#include "ecs/Component.hpp"
+#include "ecs/Transform.hpp"
 #include "graphics/Renderer.hpp"
 #include "graphics/Sprite.hpp"
 
@@ -17,7 +17,7 @@ public:
     void start() override;
     void update(float deltaTime) override;
     void shutdown() override;
-    SpriteRenderer* clone(Entity* newParent) override;
-    void draw(Renderer* renderer);
+    virtual void draw(Renderer* renderer);
 };
+REGISTERCOMPONENT(SpriteRenderer)
 }

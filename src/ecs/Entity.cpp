@@ -1,5 +1,6 @@
-#include "scene/Entity.hpp"
+#include "ecs/Entity.hpp"
 #include <algorithm>
+#include "ecs/ComponentRegistry.hpp"
 
 namespace GameEngine
 {
@@ -195,5 +196,48 @@ Entity* Entity::clone(bool keepGlobalTransform) const
         newEntity->addChild(clonedChild);
     }
     return newEntity;
+}
+void from_json(const nlohmann::json& j, Entity& u)
+{
+    u.name = j.value("name", "");
+    u.active = j.value("active", true);
+    u.localTransform = j.value("localTransform", Transform());
+    for (const auto& childJson : j["children"])
+    {
+        GameEngine::Entity* child = new GameEngine::Entity(&u);
+        from_json(childJson, *child);
+    }
+    for (const auto& componentJson : j["components"])
+    {
+        std::string typeName = componentJson.value("type", "");
+        if (GameEngine::ComponentRegistry::isComponentRegistered(typeName))
+        {
+            GameEngine::Component* component = GameEngine::ComponentRegistry::createComponent(typeName, &u);
+            component->deserialize(componentJson);
+            u.addComponent(component);
+        }
+        else
+        {
+            Logger::logWarning("Component type '%s' is not registered. Skipping deserialization.", typeName.c_str());
+        }
+    }
+}
+void to_json(nlohmann::json& j, const Entity& u)
+{
+    j["name"] = u.name;
+    j["active"] = u.active;
+    j["localTransform"] = u.localTransform;
+    j["children"] = nlohmann::json::array();
+    for (const auto& child : u.getChildren())
+    {
+        nlohmann::json childJson;
+        to_json(childJson, *child);
+        j["children"].push_back(childJson);
+    }
+    j["components"] = nlohmann::json::array();
+    for (const auto& component : u.getComponents())
+    {
+        j["components"].push_back(component->serialize());
+    }
 }
 }

@@ -2,14 +2,16 @@
 #include <chrono>
 
 namespace GameEngine {
+class Engine;
 class Time {
 public:
-    void update();
-    float deltaTime() const;
-    float elapsedTime() const;
+    static float deltaTime();
+    static float elapsedTime();
+    friend class Engine;
 private:
-    std::chrono::high_resolution_clock::time_point lastTime = std::chrono::high_resolution_clock::now();
-    float deltaTimeValue = 0.0f;
-    float elapsedTimeValue = 0.0f;
+    static void update();
+    static std::chrono::high_resolution_clock::time_point lastTime;
+    static float deltaTimeValue;
+    static float elapsedTimeValue;
 };
 }

@@ -1,9 +1,19 @@
 #include "graphics/Window.hpp"
+#include "assets/Texture.hpp"
 
 namespace GameEngine {
-Window::Window(Vector2i size, std::string name, Uint32 flags) {
+Window::Window(Vector2i size, std::string name, bool fullscreen, bool resizable, bool bordered, Uint32 flags) {
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y, flags);
+    if (fullscreen) {
+        setFullscreen(true);
+    }
+    if (!resizable) {
+        setResizable(false);
+    }
+    if (!bordered) {
+        setBorderered(false);
+    }
 }
 Window::~Window() {
     SDL_DestroyWindow(window);

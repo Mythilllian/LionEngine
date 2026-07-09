@@ -1,17 +1,21 @@
 #pragma once
 
 #include <SDL.h>
+#include <nlohmann/json.hpp>
 
 namespace GameEngine {
 class Color{
 public:
     // Color values range from 0-255 (inclusive)
     Uint8 r, g, b, a;
-    Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-    Color(int r, int g, int b, int a = 255);
+    Color(Uint8 r = 255, Uint8 g = 255, Uint8 b = 255, Uint8 a = 255);
     Color toGrayscale();
     Color invert();
     SDL_Color toSDLColor() const;
+    Color operator*(float scalar) const;
+    Color operator*(const Color other) const;
+    Color operator*(float scalar);
+    Color operator*(const Color other);
 
     static const Color RED;
     static const Color GREEN;
@@ -26,4 +30,5 @@ public:
     static const Color PINK;
     static const Color YELLOW;
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Color, r, g, b, a)
 }

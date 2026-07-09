@@ -5,7 +5,7 @@ namespace GameEngine {
 AudioManager::AudioManager() {
     SDL_Init(SDL_INIT_AUDIO);
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        Logger::logError("SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError());
     }
 }
 AudioManager::~AudioManager() {
@@ -13,7 +13,7 @@ AudioManager::~AudioManager() {
 }
 void AudioManager::playMusic(const Music& music, int loops, int fadeInMs) {
     if (!music.getMusic()) {
-        printf("Failed to load music: %s\n", Mix_GetError());
+        Logger::logWarning("Failed to load music: %s", Mix_GetError());
         return;
     }
     if (fadeInMs > 0) {
@@ -26,7 +26,7 @@ void AudioManager::playMusic(const Music& music, int loops, int fadeInMs) {
 }
 int AudioManager::playAudio(const Audio& audio, int fadeInMs) {
     if (!audio.getAudioChunk()) {
-        printf("Failed to load audio: %s\n", Mix_GetError());
+        Logger::logWarning("Failed to load audio: %s", Mix_GetError());
         return -1;
     }
     if (fadeInMs > 0) {

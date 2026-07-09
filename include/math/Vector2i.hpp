@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include "math/Vector2.hpp"
+#include <nlohmann/json.hpp>
 
 namespace GameEngine {
 class Vector2i {
@@ -10,10 +11,14 @@ public:
     Vector2i(const Vector2& other);
     Vector2i operator+(const Vector2i& other) const;
     Vector2i operator-(const Vector2i& other) const;
+    Vector2i operator*(const Vector2i& other) const;
+    Vector2i operator/(const Vector2i& other) const;
     Vector2i operator*(int scalar) const;
     Vector2i operator/(int scalar) const;
     Vector2i operator+=(const Vector2i& other);
     Vector2i operator-=(const Vector2i& other);
+    Vector2i operator*=(const Vector2i& other);
+    Vector2i operator/=(const Vector2i& other);
     Vector2i operator*=(int scalar);
     Vector2i operator/=(int scalar);
     bool operator==(const Vector2i& other) const;
@@ -28,4 +33,5 @@ public:
     static const Vector2i UP;
     static const Vector2i ZERO;
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Vector2i, x, y)
 }

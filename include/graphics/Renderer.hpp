@@ -5,10 +5,11 @@
 #include <algorithm>
 #include <SDL.h>
 #include "graphics/Color.hpp"
-#include "components/SpriteRenderer.hpp"
+#include "ecs/SpriteRenderer.hpp"
 #include "math/Vector2i.hpp"
 #include "graphics/Camera.hpp"
 #include "graphics/Window.hpp"
+#include "utils/Logger.hpp"
 
 namespace GameEngine{
 class Camera;

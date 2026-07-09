@@ -2,6 +2,10 @@
 
 #include "assets/Asset.hpp"
 #include <SDL_mixer.h>
+#include "utils/Logger.hpp"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace GameEngine {
 class Music : public Asset {
@@ -17,4 +21,6 @@ private:
     Mix_Music* music;
     int volume; // default/maximum volume of the music
 };
+void from_json(const json& j, Music& u);
+void to_json(json& j, const Music& u);
 }

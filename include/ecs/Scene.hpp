@@ -1,7 +1,10 @@
 #pragma once
-#include "scene/Entity.hpp"
-#include "components/SpriteRenderer.hpp"
+#include "ecs/Entity.hpp"
+#include "ecs/SpriteRenderer.hpp"
 #include <vector>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace GameEngine {
 class Scene {
@@ -16,6 +19,7 @@ public:
     Entity* getRootEntity();
     std::vector<SpriteRenderer*> getSpriteRenderers() const;
     Scene* clone() const;
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, root)
 private:
     Entity root;
 };
