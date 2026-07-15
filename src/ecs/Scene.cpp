@@ -1,6 +1,6 @@
-#include "ecs/Scene.hpp"
+#include "LionEngine/ecs/Scene.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Scene::Scene() : root(nullptr, "Root") {}
 // Scene::Scene(json sceneData) : root(nullptr, "Root") 
 // {

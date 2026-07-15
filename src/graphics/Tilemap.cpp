@@ -1,6 +1,6 @@
-#include "graphics/Tilemap.hpp"
+#include "LionEngine/graphics/Tilemap.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Tilemap::Tilemap(Texture* texture, Vector2i tileSize, Vector2i spacing, Color tint)
     : texture(texture), tileSize(tileSize), spacing(spacing), tint(tint)
 {
@@ -20,6 +20,6 @@ ImageSprite Tilemap::getTileSprite(int x, int y, Color tint) const {
     }
     int tileX = x * (tileSize.x + spacing.x);
     int tileY = y * (tileSize.y + spacing.y);
-    return ImageSprite(texture, this->tint * tint, new Vector2i(tileX, tileY));
+    return ImageSprite(texture, this->tint * tint, Rect(tileX, tileY, tileSize.x, tileSize.y));
 }
 }

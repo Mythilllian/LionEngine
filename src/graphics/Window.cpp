@@ -1,7 +1,8 @@
-#include "graphics/Window.hpp"
-#include "assets/Texture.hpp"
+#include "LionEngine/graphics/Window.hpp"
+#include "LionEngine/assets/Texture.hpp"
+#include "LionEngine/core/Engine.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Window::Window(Vector2i size, std::string name, bool fullscreen, bool resizable, bool bordered, Uint32 flags) {
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y, flags);
@@ -52,6 +53,10 @@ Vector2i Window::getPosition() const {
 }
 void Window::setSize(int width, int height) {
     SDL_SetWindowSize(window, width, height);
+    Engine::instance().renderer().resetLogicalUnit();
+}
+void Window::setSize(Vector2i size) {
+    setSize(size.x, size.y);
 }
 void Window::setPosition(int x, int y) {
     SDL_SetWindowPosition(window, x, y);

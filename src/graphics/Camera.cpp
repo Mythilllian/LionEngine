@@ -1,6 +1,6 @@
-#include "graphics/Camera.hpp"
+#include "LionEngine/graphics/Camera.hpp"
 
-namespace GameEngine
+namespace LionEngine
 {
 Camera::Camera(Vector2i size, Vector2 position) : size(size), position(position) {}
 void Camera::setCenter(Vector2 center)

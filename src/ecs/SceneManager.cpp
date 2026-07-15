@@ -1,7 +1,7 @@
-#include "ecs/SceneManager.hpp"
-#include "ecs/ImageSpriteRenderer.hpp"
+#include "LionEngine/ecs/SceneManager.hpp"
+#include "LionEngine/ecs/ImageSpriteRenderer.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 SceneManager::SceneManager(AssetManager* assetManager) : assetManager(assetManager), currentScene(nullptr) {}
 SceneManager::SceneManager(AssetManager* assetManager, Scene* scene) : assetManager(assetManager) { loadScene(scene); }
 SceneManager::SceneManager(AssetManager* assetManager, const std::string& path) : assetManager(assetManager) { loadScene(path); }

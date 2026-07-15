@@ -1,6 +1,6 @@
-#include "ecs/Transform.hpp"
+#include "LionEngine/ecs/Transform.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Transform Transform::operator*(const Transform& other)
 {
     Vector2 newPosition = position + other.position;

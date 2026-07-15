@@ -1,7 +1,7 @@
-#include "audio/AudioManager.hpp"
+#include "LionEngine/audio/AudioManager.hpp"
 #include <algorithm>
 
-namespace GameEngine {
+namespace LionEngine {
 AudioManager::AudioManager() {
     SDL_Init(SDL_INIT_AUDIO);
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {

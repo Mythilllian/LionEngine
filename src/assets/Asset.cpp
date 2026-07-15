@@ -1,6 +1,6 @@
-#include "assets/Asset.hpp"
+#include "LionEngine/assets/Asset.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Asset::Asset(const std::string& path) : path(path) {}
 Asset::Asset() : path("") {}
 }

@@ -1,6 +1,6 @@
-#include "utils/FileSystem.hpp"
+#include "LionEngine/utils/FileSystem.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 std::string FileSystem::readFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {

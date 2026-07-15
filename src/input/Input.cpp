@@ -1,7 +1,7 @@
-#include "input/Input.hpp"
+#include "LionEngine/input/Input.hpp"
 #include <iostream>
 
-namespace GameEngine {
+namespace LionEngine {
 bool Input::currentKeys[SDL_NUM_SCANCODES] = {};
 bool Input::previousKeys[SDL_NUM_SCANCODES] = {};
 bool Input::quitRequested = false;

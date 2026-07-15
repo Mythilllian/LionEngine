@@ -1,13 +1,13 @@
-#include "assets/AssetManager.hpp"
+#include "LionEngine/assets/AssetManager.hpp"
 #include <fstream>
-#include "assets/Asset.hpp"
-#include "assets/Audio.hpp"
-#include "assets/Music.hpp"
-#include "assets/Texture.hpp"
-#include "graphics/Renderer.hpp"
-#include "utils/Logger.hpp"
+#include "LionEngine/assets/Asset.hpp"
+#include "LionEngine/assets/Audio.hpp"
+#include "LionEngine/assets/Music.hpp"
+#include "LionEngine/assets/Texture.hpp"
+#include "LionEngine/graphics/Renderer.hpp"
+#include "LionEngine/utils/Logger.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 AssetManager::AssetManager(const std::string& assetDirectory, Renderer* renderer) : assetDirectory(assetDirectory), renderer(renderer) { }
 Asset* AssetManager::loadAsset(const std::string& assetLocation) {
     if (!exists(assetLocation)) {

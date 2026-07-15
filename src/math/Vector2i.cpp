@@ -1,6 +1,7 @@
-#include "math/Vector2i.hpp"
+#include "LionEngine/math/Vector2i.hpp"
+#include "LionEngine/math/Vector2.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Vector2i::Vector2i(int x, int y) : x(x), y(y) {}
 Vector2i::Vector2i(const Vector2& other) {
     x = static_cast<int>(other.x);
@@ -65,9 +66,6 @@ float Vector2i::dotProduct(const Vector2i& other) const {
 }
 float Vector2i::magnitude() const {
     return std::sqrt(x * x + y * y);
-}
-Vector2 Vector2i::toVector2() const {
-    return Vector2(static_cast<float>(x), static_cast<float>(y));
 }
 const Vector2i Vector2i::DOWN{0, -1};
 const Vector2i Vector2i::LEFT{-1, 0};

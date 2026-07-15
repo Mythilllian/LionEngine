@@ -1,6 +1,6 @@
-#include "assets/Texture.hpp"
+#include "LionEngine/assets/Texture.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 std::vector<Texture*> Texture::unloadedTextures;
 Texture::Texture(const std::string& path) : Asset(path) {
     load();

@@ -1,7 +1,7 @@
-#include "assets/Audio.hpp"
+#include "LionEngine/assets/Audio.hpp"
 #include <algorithm>
 
-namespace GameEngine {
+namespace LionEngine {
 Audio::Audio(const std::string& path, int volume) : Asset(path), audioChunk(Mix_LoadWAV(path.c_str())) {
     volume = std::clamp(volume, 0, MIX_MAX_VOLUME);
     this->volume = volume;

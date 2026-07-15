@@ -1,7 +1,23 @@
-#include "math/Vector2.hpp"
+#include "LionEngine/math/Vector2.hpp"
+#include "LionEngine/math/Vector2i.hpp"
+#include "LionEngine/math/Direction.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Vector2::Vector2(float x, float y) : x(x), y(y) {}
+Vector2::Vector2(const Vector2i& other) {
+    x = static_cast<float>(other.x);
+    y = static_cast<float>(other.y);
+}
+Vector2::Vector2(const Direction& direction) {
+    float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (magnitude == 0) {
+        x = 0;
+        y = 0;
+    } else {
+        x = direction.x / magnitude;
+        y = direction.y / magnitude;
+    }
+}
 Vector2 Vector2::operator+(const Vector2& other) const {
     return Vector2(x + other.x, y + other.y);
 }

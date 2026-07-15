@@ -1,9 +1,8 @@
-#include "ecs/ImageSpriteRenderer.hpp"
-#include "ecs/Entity.hpp"
+#include "LionEngine/ecs/ImageSpriteRenderer.hpp"
+#include "LionEngine/ecs/Entity.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 ImageSpriteRenderer::ImageSpriteRenderer(Entity* parent) : SpriteRenderer(parent), sprite(nullptr) {
-    SERIALIZEFIELD(layer);
     SERIALIZEFIELD(sprite);
 }
 void ImageSpriteRenderer::draw(Renderer* renderer) {
@@ -11,6 +10,12 @@ void ImageSpriteRenderer::draw(Renderer* renderer) {
         return;
     }
     Transform transform = parent->globalTransform();
-    sprite->draw(renderer, transform.position.x, transform.position.y, transform.scale.x);
+    if(parent->centerTransform) {
+        transform.position.x -= transform.scale.x * 0.5f;
+        transform.position.y -= transform.scale.x * 0.5f;
+    }
+    float width = resizeToEntity ? transform.scale.x : sprite->getSize().x;
+    float height = keepAspectRatio ? sprite->calculateHeightFromWidth(width) : sprite->getSize().y;
+    sprite->draw(renderer, transform.position.x, transform.position.y, width, height);
 }
 }

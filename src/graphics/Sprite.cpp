@@ -1,7 +1,11 @@
-#include "graphics/Sprite.hpp"
+#include "LionEngine/graphics/Sprite.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Sprite::Sprite(Color tintColor) : tint(tintColor) {}
+float Sprite::calculateHeightFromWidth(float width) const {
+    Vector2i size = getSize();
+    return width * (static_cast<float>(size.y) / static_cast<float>(size.x));
+}
 void Sprite::serialize(json& j) const {
     j = json{{"visible", visible}, {"tint", tint}};
 }

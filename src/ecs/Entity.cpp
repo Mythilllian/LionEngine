@@ -1,8 +1,8 @@
-#include "ecs/Entity.hpp"
+#include "LionEngine/ecs/Entity.hpp"
 #include <algorithm>
-#include "ecs/ComponentRegistry.hpp"
+#include "LionEngine/ecs/ComponentRegistry.hpp"
 
-namespace GameEngine
+namespace LionEngine
 {
 Entity::Entity(Entity* parent, const std::string& name, const Transform& transform, bool isGlobalTransform, bool active) : parent(parent), name(name), active(active)
 {
@@ -74,6 +74,26 @@ void Entity::shutdown()
     for (auto& child : children)
     {
         child->shutdown();
+    }
+}
+void Entity::callEvent(const std::string& eventName, bool recursive, void* eventData)
+{
+    for (auto& component : components)
+    {
+        if (component->active)
+        {
+            component->onEvent(eventName, eventData);
+        }
+    }
+    if (recursive)
+    {
+        for (auto& child : children)
+        {
+            if (child->active)
+            {
+                child->callEvent(eventName, recursive, eventData);
+            }
+        }
     }
 }
 std::vector<Component*> Entity::getComponents() const
@@ -167,6 +187,15 @@ Entity* Entity::getChildByName(const std::string& name) const
     }
     return nullptr;
 }
+int Entity::getChildIndex(Entity* child) const
+{
+    auto it = std::find(children.begin(), children.end(), child);
+    if (it != children.end())
+    {
+        return static_cast<int>(std::distance(children.begin(), it));
+    }
+    return -1;
+}
 Transform Entity::globalTransform() const
 {
     if (parent == nullptr)
@@ -174,6 +203,25 @@ Transform Entity::globalTransform() const
         return localTransform;
     }
     return parent->globalTransform() * localTransform;
+}
+Transform Entity::globalTransform(bool centeredTransform) const
+{
+    Transform transform = globalTransform();
+    if(centeredTransform == centerTransform)
+    {
+        return globalTransform();
+    }
+    else if(centeredTransform)
+    {
+        transform.position.x -= transform.scale.x * 0.5f;
+        transform.position.y -= transform.scale.y * 0.5f;
+    }
+    else if(!centeredTransform)
+    {
+        transform.position.x += transform.scale.x * 0.5f;
+        transform.position.y += transform.scale.y * 0.5f;
+    }
+    return transform;
 }
 void Entity::updateGlobalTransform(Transform transform)
 {
@@ -201,18 +249,19 @@ void from_json(const nlohmann::json& j, Entity& u)
 {
     u.name = j.value("name", "");
     u.active = j.value("active", true);
+    u.centerTransform = j.value("centerTransform", true);
     u.localTransform = j.value("localTransform", Transform());
     for (const auto& childJson : j["children"])
     {
-        GameEngine::Entity* child = new GameEngine::Entity(&u);
+        LionEngine::Entity* child = new LionEngine::Entity(&u);
         from_json(childJson, *child);
     }
     for (const auto& componentJson : j["components"])
     {
         std::string typeName = componentJson.value("type", "");
-        if (GameEngine::ComponentRegistry::isComponentRegistered(typeName))
+        if (LionEngine::ComponentRegistry::isComponentRegistered(typeName))
         {
-            GameEngine::Component* component = GameEngine::ComponentRegistry::createComponent(typeName, &u);
+            LionEngine::Component* component = LionEngine::ComponentRegistry::createComponent(typeName, &u);
             component->deserialize(componentJson);
             u.addComponent(component);
         }
@@ -226,6 +275,7 @@ void to_json(nlohmann::json& j, const Entity& u)
 {
     j["name"] = u.name;
     j["active"] = u.active;
+    j["centerTransform"] = u.centerTransform;
     j["localTransform"] = u.localTransform;
     j["children"] = nlohmann::json::array();
     for (const auto& child : u.getChildren())

@@ -1,6 +1,6 @@
-#include "utils/Logger.hpp"
+#include "LionEngine/utils/Logger.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 std::ofstream Logger::file;
 std::string Logger::logDirectory = "logs";
 std::string Logger::logFile = "log.txt";

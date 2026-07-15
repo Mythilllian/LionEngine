@@ -1,14 +1,15 @@
-#include "core/Engine.hpp"
+#include "LionEngine/core/Engine.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Engine::Engine(const Config& config, Game* game)
     : config_(config),
       window_(config_.windowSize, config_.windowTitle, config_.fullscreen, config_.resizeable, config_.bordered),
-      renderer_(window_, config_.clearColor, config_.logicalSize),
+      renderer_(window_, config_.clearColor, config_.logicalSize, config_.roundToLogicalUnit),
       audioManager_(),
       assetManager_(config_.assetDirectory, &renderer_),
       sceneManager_(&assetManager_),
-      game_(game) 
+      game_(game),
+      physics_(config_.gravity, config_.gravityDirection)
 {
     instance_ = this;
 
@@ -25,6 +26,8 @@ Engine::Engine(const Config& config, Game* game)
         sceneManager_.loadScene(config.startupScenePath);
     }
 }
+Engine::Engine(const std::string& configPath)
+    : Engine(json::parse(FileSystem::readFile(configPath)), nullptr) {}
 Engine::~Engine() {
     instance_ = nullptr;
     Logger::logInfo("Game engine shut down.");
@@ -76,5 +79,15 @@ AudioManager& Engine::audioManager() { return audioManager_; }
 const AudioManager& Engine::audioManager() const { return audioManager_; }
 AssetManager& Engine::assetManager() { return assetManager_; }
 const AssetManager& Engine::assetManager() const { return assetManager_; }
+Physics& Engine::physics() { return physics_; }
+const Physics& Engine::physics() const { return physics_; }
+Window& Engine::window() { return window_; }
+const Window& Engine::window() const { return window_; }
+Renderer& Engine::renderer() { return renderer_; }
+const Renderer& Engine::renderer() const { return renderer_; }
+PersistentData& Engine::persistentData() { return persistentData_; }
+const PersistentData& Engine::persistentData() const { return persistentData_; }
+Config& Engine::config() { return config_; }
+const Config& Engine::config() const { return config_; }
 Engine* Engine::instance_ = nullptr;
 }

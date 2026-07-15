@@ -1,7 +1,12 @@
-#include "ecs/Component.hpp"
+#include "LionEngine/ecs/Component.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 Component::Component(Entity* parent) : parent(parent) {}
+void Component::init() {}
+void Component::start() {}
+void Component::update(float deltaTime) {}
+void Component::shutdown() {}
+void Component::onEvent(const std::string& eventName, void* eventData) {}
 json Component::serialize() const {
     json j;
     j["type"] = ComponentRegistry::getComponentName(this);

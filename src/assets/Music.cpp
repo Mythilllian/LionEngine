@@ -1,7 +1,7 @@
-#include "assets/Music.hpp"
+#include "LionEngine/assets/Music.hpp"
 #include <algorithm>
 
-namespace GameEngine {
+namespace LionEngine {
 Music::Music(const std::string& path, int volume) : Asset(path), music(Mix_LoadMUS(path.c_str())) {
     volume = std::clamp(volume, 0, MIX_MAX_VOLUME);
     this->volume = volume;

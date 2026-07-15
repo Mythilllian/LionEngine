@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(GameEngine)
+project(LionEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,14 +12,14 @@ find_package(nlohmann_json 3.12.0 REQUIRED)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
-add_executable(
-    GameEngine
+add_library(
+    LionEngine STATIC
     ${SOURCES}
 )
 
 target_link_libraries(
-    GameEngine
-    PRIVATE 
+    LionEngine
+    PUBLIC 
     SDL2::SDL2
     SDL2_mixer::SDL2_mixer
     SDL2_image::SDL2_image
@@ -27,7 +27,7 @@ target_link_libraries(
 )
 
 target_include_directories(
-    GameEngine
-    PRIVATE 
+    LionEngine
+    PUBLIC 
     include
 )

@@ -1,6 +1,6 @@
-#include "core/Time.hpp"
+#include "LionEngine/core/Time.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
 std::chrono::high_resolution_clock::time_point Time::lastTime = std::chrono::high_resolution_clock::now();
 float Time::deltaTimeValue = 0.0f;
 float Time::elapsedTimeValue = 0.0f;

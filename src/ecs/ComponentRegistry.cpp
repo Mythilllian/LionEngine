@@ -1,8 +1,8 @@
-#include "ecs/ComponentRegistry.hpp"
-#include "ecs/Entity.hpp"
-#include "ecs/Component.hpp"
+#include "LionEngine/ecs/ComponentRegistry.hpp"
+#include "LionEngine/ecs/Entity.hpp"
+#include "LionEngine/ecs/Component.hpp"
 
-namespace GameEngine {
+namespace LionEngine {
     void ComponentRegistry::registerComponent(const std::string& typeName, std::type_index typeIndex, Component* (*createFunc)(Entity*)) {
         creatorRegistry()[typeName] = createFunc;
         nameRegistry()[typeIndex] = typeName;
